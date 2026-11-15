@@ -7,24 +7,31 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
   /* ── откуда качать exe ──────────────────────────────────────────────
-     Пусто → кнопки ведут на локальный файл `download/Neural-Hours.exe`
-     (так работает локальный просмотр и хостинг «всё в одной папке»).
+     Если рядом с сайтом лежит `download/Neural-Hours.exe` — кнопки ведут
+     на него. Если файла нет (например, он выложен в GitHub Releases и не
+     залит в репозиторий) — кнопки автоматически переключаются на DOWNLOAD_URL.
 
-     Если бинарник лежит отдельно — например, в GitHub Releases — впиши
-     сюда прямой адрес, и все кнопки переключатся на него:
+     Ссылка `releases/latest/download/...` всегда ведёт на ассет из последнего
+     релиза, поэтому при выпуске новой версии её менять не нужно. */
 
-       const DOWNLOAD_URL = 'https://github.com/USER/REPO/releases/latest/download/Neural-Hours.exe';
-
-     Ссылка `releases/latest/download/...` всегда ведёт на ассет из
-     последнего релиза, так что при обновлении версии её менять не нужно. */
-
-  const DOWNLOAD_URL = '';
+  const DOWNLOAD_URL =
+    'https://github.com/MortySTR/hours/releases/latest/download/Neural.Hours.exe';
 
   if (DOWNLOAD_URL) {
-    $$('a[href^="download/"]').forEach(a => {
-      a.href = DOWNLOAD_URL;
-      a.removeAttribute('download'); // чужой домен: имя файла задаёт сам хостинг
-    });
+    const useRelease = () => {
+      $$('a[href^="download/"]').forEach(a => {
+        a.href = DOWNLOAD_URL;
+        a.removeAttribute('download'); // чужой домен: имя файла задаёт хостинг
+      });
+    };
+
+    if (location.protocol === 'file:') {
+      // локальный просмотр: файл лежит рядом, оставляем как есть
+    } else {
+      fetch('download/Neural-Hours.exe', { method: 'HEAD', cache: 'no-store' })
+        .then(r => { if (!r.ok) useRelease(); })
+        .catch(useRelease);
+    }
   }
 
   /* ── появление при скролле ──────────────────────────────────────── */
