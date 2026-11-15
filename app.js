@@ -280,10 +280,11 @@
   /* ── вкладки скриншотов ────────────────────────────────────────── */
 
   const LABELS = {
-    dark: 'библиотека',
-    aurora: 'настройки',
-    light: 'светлая тема',
-    qr: 'вход по QR'
+    library: 'библиотека',
+    session: 'сессия',
+    safety: 'безопасность',
+    appearance: 'оформление',
+    settings: 'настройки'
   };
 
   const shots = $$('[data-shot-img]');
@@ -374,6 +375,85 @@
         });
       }, { passive: true });
     }
+  }
+
+  /* ── снег ──────────────────────────────────────────────────────── */
+  /* Тот же приём, что в приложении: 150 снежинок, разная скорость и
+     качание, крупные рисуются шестилучёвыми звёздочками. */
+
+  const snowCv = document.getElementById('snow');
+  if (snowCv && !reduce) {
+    const ctx = snowCv.getContext('2d');
+    const COUNT = 150;
+    const flakes = [];
+    let W = 0, H = 0;
+    const rand = (a, b) => a + Math.random() * (b - a);
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      snowCv.width = Math.round(W * dpr);
+      snowCv.height = Math.round(H * dpr);
+      snowCv.style.width = W + 'px';
+      snowCv.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const spawn = (f, anywhere) => {
+      f.x = Math.random() * W;
+      f.y = anywhere ? Math.random() * H : -10 - Math.random() * 60;
+      f.vy = rand(16, 52);
+      f.sway = rand(6, 24);
+      f.phase = Math.random() * Math.PI * 2;
+      f.size = rand(1.1, 3.4);
+      f.alpha = rand(0.26, 0.7);
+    };
+
+    resize();
+    for (let i = 0; i < COUNT; i++) {
+      const f = {};
+      spawn(f, true);
+      flakes.push(f);
+    }
+
+    let last = performance.now();
+    const frame = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      ctx.clearRect(0, 0, W, H);
+
+      for (const f of flakes) {
+        f.y += f.vy * dt;
+        f.x += Math.sin(f.phase + now * 0.0007) * f.sway * dt;
+        if (f.y > H + 10) spawn(f, false);
+        if (f.x < -10) f.x = W + 8;
+        else if (f.x > W + 10) f.x = -8;
+
+        if (f.size > 2.6) {
+          const r = f.size * 1.5;
+          ctx.strokeStyle = `rgba(214,228,255,${f.alpha})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          for (let k = 0; k < 3; k++) {
+            const a = f.phase + (k * Math.PI) / 3;
+            const dx = Math.cos(a) * r;
+            const dy = Math.sin(a) * r;
+            ctx.moveTo(f.x - dx, f.y - dy);
+            ctx.lineTo(f.x + dx, f.y + dy);
+          }
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = `rgba(214,228,255,${f.alpha})`;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.size * 0.7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    window.addEventListener('resize', resize);
   }
 
 })();

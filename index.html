@@ -302,7 +302,7 @@
           </div>
           <h3>Три темы</h3>
           <p>Тёмная, светлая и Aurora. Переключение — плавный кросс-фейд в линейном
-             пространстве, без грязного серого посередине.</p>
+             пространстве. Плюс снегопад поверх окна — включается одной кнопкой.</p>
         </article>
 
         <article class="card reveal" data-delay="120" data-spotlight>
@@ -451,10 +451,11 @@
       </div>
 
       <div class="shots-tabs reveal" data-delay="100" role="tablist">
-        <button class="shot-tab is-active" data-shot="dark" role="tab" aria-selected="true">Библиотека</button>
-        <button class="shot-tab" data-shot="aurora" role="tab" aria-selected="false">Настройки</button>
-        <button class="shot-tab" data-shot="light" role="tab" aria-selected="false">Светлая тема</button>
-        <button class="shot-tab" data-shot="qr" role="tab" aria-selected="false">Вход по QR</button>
+        <button class="shot-tab is-active" data-shot="library" role="tab" aria-selected="true">Библиотека</button>
+        <button class="shot-tab" data-shot="session" role="tab" aria-selected="false">Сессия</button>
+        <button class="shot-tab" data-shot="safety" role="tab" aria-selected="false">Безопасность</button>
+        <button class="shot-tab" data-shot="appearance" role="tab" aria-selected="false">Оформление</button>
+        <button class="shot-tab" data-shot="settings" role="tab" aria-selected="false">Настройки</button>
       </div>
 
       <div class="shots-frame reveal" data-delay="140">
@@ -463,10 +464,11 @@
           <div class="shots-addr">Neural Hours · <b id="shotLabel">библиотека</b></div>
         </div>
         <div class="shots-viewport">
-          <img class="shot is-active" data-shot-img="dark" src="assets/shots/dark.webp" alt="Библиотека Steam в тёмной теме" width="1120" height="720">
-          <img class="shot" data-shot-img="aurora" src="assets/shots/aurora.webp" alt="Настройки в теме Aurora" width="1120" height="720">
-          <img class="shot" data-shot-img="light" src="assets/shots/light.webp" alt="Светлая тема оформления" width="1120" height="720">
-          <img class="shot" data-shot-img="qr" src="assets/shots/qr_step1_login.webp" alt="Вход в Steam по QR-коду" width="1120" height="720">
+          <img class="shot is-active" data-shot-img="library" src="assets/shots/library.webp" alt="Библиотека Steam с часами и чекбоксами" width="1120" height="720">
+          <img class="shot" data-shot-img="session" src="assets/shots/session.webp" alt="Страница текущей сессии с таймером" width="1120" height="720">
+          <img class="shot" data-shot-img="safety" src="assets/shots/safety.webp" alt="Защита аккаунта: безопасный режим и шкала риска" width="1120" height="720">
+          <img class="shot" data-shot-img="appearance" src="assets/shots/appearance.webp" alt="Оформление: три темы и анимации" width="1120" height="720">
+          <img class="shot" data-shot-img="settings" src="assets/shots/settings.webp" alt="Настройки: автозапуск, трей и путь к конфигу" width="1120" height="720">
         </div>
       </div>
     </div>
@@ -497,7 +499,7 @@
 
         <div class="privacy-hash">
           <div class="hash-label">SHA-256 сборки</div>
-          <code class="hash-value" id="hashValue">99cd914f6824c707da483f36e62710a863511824ea18bac5a73c90ddb09d7205</code>
+          <code class="hash-value" id="hashValue">d21cce4c89ed7d4c5200c6f44bd4b8e277483728f153f86823f5914a0c1c965c</code>
           <button class="hash-copy" id="hashCopy" type="button">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
             <span id="hashCopyText">Скопировать</span>
@@ -643,6 +645,8 @@
     </div>
   </div>
 </footer>
+
+<canvas class="snow" id="snow" aria-hidden="true"></canvas>
 
 <script src="app.js"></script>
 </body>
